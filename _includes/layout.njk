@@ -1,0 +1,175 @@
+<!doctype html>
+
+<html class="no-js" lang="gl">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>{{ titulo }} - DAG</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="author" content="DAG - Asociación Galega de Deseño">
+
+        <link rel="stylesheet" href="./styles.css">
+    </head>
+
+    <body>
+        <!-- HEADER -->
+        <nav class="page-header wrapper" id="main-header">
+            <a href="https://dag.gal" class="page-logo" title="Asociación Galega de Deseño">
+                <img src="./img/dag.svg" inline>
+            </a>
+        </nav>
+        <!-- /HEADER -->
+
+        <script type="text/javascript">
+            function moveRandom(el) {
+                var x = Math.random() * 100;
+                var y = Math.random() * 100;
+                var z = (Math.random() * 2) + .5
+
+                el.style.transform = 'translate('+x+'vw, '+y+'vh) scale('+z+')';
+            }
+
+            function createBall() {
+                var ball = document.createElement('span');
+                ball.classList.add('ball');
+                document.body.appendChild(ball);
+                moveRandom(ball);
+
+                setTimeout(function () {
+                    moveRandom(ball);
+
+                    setInterval(function () {
+                        moveRandom(ball);
+                    }, 10000);
+                }, 100)
+            }
+
+            createBall();
+            createBall();
+            createBall();
+            createBall();
+            createBall();
+        </script>
+
+        <article class="project">
+            <div class="project-head wrapper">
+                <header class="project-header">
+                    <h1>{{ titulo | md(true) | safe }}</h1>
+
+                    <div class="project-subtitle">
+                      {{ subtitulo | md(true) | safe }}
+                    </div>
+
+                    <div class="project-place">
+                      {{ data | md(true) | safe }}
+                    </div>
+                </header>
+
+                <div class="project-intro">
+                    {{ intro | md | safe }}
+                </div>
+            </div>
+
+            <aside class="project-social-highlight">
+                <div>
+                  <a data-flickr-embed='true' href='https://www.flickr.com/photos/asociaciondag/sets/72157690510886036' title='FEED 2017 by Asociación DAG, on Flickr'><img src='https://live.staticflickr.com/4522/38326319012_734aac1040_b.jpg'></a><script async src='https://embedr.flickr.com/assets/client-code.js' charset='utf-8'></script>
+                </div>
+            </aside>
+
+            <section class="project-invitados wrapper" id="participantes">
+              {% for val in participantes %}
+              <article class="invitado" id="{{ val.index }}">
+                  <figure class="invitado-img">
+                      <img src="./img/participantes/{{ val.img }}">
+                  </figure>
+
+                  <div>
+                      <h1>
+                          {{ val.titulo or val.nome }}
+
+                          {% if val.boton %}
+                          <a href="{{ val.boton.url }}" class="button-secondary">
+                              {{ val.boton.text }}
+                          </a>
+                          {% endif %}
+                      </h1>
+
+                      <div class="invitado-bio">
+                          {{ val.bio | md | safe }}
+                      </div>
+
+                      <ul class="invitado-actos">
+                          {% for acto in val.actos %}
+                          <li>
+                              <h2>{{ acto.titulo | md(true) | safe }}</h2>
+                              {{ acto.info | md | safe }}
+                          </li>
+                          {% endfor %}
+                      </ul>
+                  </div>
+              </article>
+              {% endfor %}
+            </section>
+
+            <section class="project-calendario" id="programa">
+                <h1>Programa</h1>
+
+                <div class="calendario-dias">
+                  {% for dia in programa %}
+                    <div class="calendario-dia">
+                        <h2>
+                            {{ dia.dia }}
+                        </h2>
+
+                        <ul>
+                            {% for hora in dia.horas %}
+                              <li class="{% if hora.organizacion %}is-organizacion{% endif %}">
+                                <strong class="hora">{{ hora.hora }}</strong>
+                                <div>
+                                  {{ hora.texto | md | safe }}
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                  {% endfor %}
+                </div>
+            </section>
+
+            <aside class="project-news-external">
+                <ul>
+                    {% for info in medios %}
+                    <li>
+                        <h3>
+                            <a href="{{ info.url }}">
+                                {{ info.title }}
+                            </a>
+                        </h3>
+                        <small>{{ info.medio }}</small>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </aside>
+
+            <section class="project-colaboradores" id="colaboradores">
+                {% for grupo in logos %}
+                <div>
+                    <h2>{{ grupo.titulo }}:</h2>
+
+                    <ul>
+                        {% for logo in grupo.items %}
+                        <li>
+                            <a href="{{ logo.url }}" title="{{ logo.titulo }}">
+                                <img src="./img/{{ logo.logo }}" alt="{{ logo.titulo }}">
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endfor %}
+            </section>
+        </article>
+    </body>
+</html>
